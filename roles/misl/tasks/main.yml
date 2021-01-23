@@ -1,0 +1,13 @@
+---
+# tasks file for /etc/ansible/roles/misl
+
+# Task 1 - installing vim, wget and nslookup
+
+- name: install the latest version of misl softwares
+  package:
+    name:
+      - vim
+      - wget
+      - bind-utils #nslookup
+      - tree
+    state: latest

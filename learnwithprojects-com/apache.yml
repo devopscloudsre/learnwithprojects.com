@@ -1,0 +1,31 @@
+---
+- name: Play 1 - Install misl softwares and Apache
+  hosts: webserver
+  become: yes
+  roles:
+    - misl
+    - apache
+
+- name: Play 2 - configure Apache
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: copy the learnwithprojects.com code
+      copy:
+        src: /etc/ansible/learnwithprojects-com/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+
+    - name: copy the proxypass file
+      copy:
+        src: /etc/ansible/learnwithprojects-com/proxypass.conf
+        dest: /etc/httpd/conf.d/proxypass.conf
+        owner: root
+        group: root
+
+    - name: Reload service httpd, in all cases
+      service:
+        name: httpd
+        state: reloaded
+

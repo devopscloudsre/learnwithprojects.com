@@ -1,0 +1,56 @@
+- name: Play 1 - Install Tomcat
+  hosts: tomcat-server
+  become: yes
+  roles:
+    - tomcat
+
+- name: Play 2 - Python Install
+  hosts: tomcat-server
+  become: yes
+  tasks:
+    - name: Install Python 3.6
+      yum:
+        name: python36
+        state: present
+      tags: python-install
+
+    - name: alternatives
+      alternatives:
+        name: python
+        link: /usr/bin/python3.6
+        path: /usr/bin/python3
+      tags: python-alternatives
+
+- name: Play 3 - Python library install and copying of War file
+  hosts: tomcat-server
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python
+  tasks:
+    - name: Install boto3 and botocore with pip3 module
+      pip:
+        name:
+          - boto
+          - boto3
+          - botocore
+        executable: pip3.6
+      tags: boto-lib-install
+
+    - name: copy the war file
+      aws_s3:
+        bucket: artificatory-915am
+        object: trainingwale.war
+        dest: /etc/tomcat/webapps/trainingwale.war
+        mode: get
+      tags: copy-war 
+
+- name: Play 4 - Start Tomcat Servers
+  hosts: tomcat-server
+  become: yes
+  become_user: root
+  tasks:
+          #- name: shut tomcat
+          #command: nohup sh /etc/tomcat/bin/shutdown.sh
+    - name: start tomcat
+      command: nohup sh /etc/tomcat/bin/startup.sh
+      tags: start-tomcat

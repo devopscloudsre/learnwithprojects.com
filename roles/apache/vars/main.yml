@@ -1,0 +1,8 @@
+---
+# vars file for /etc/ansible/roles/apache
+packages:
+  - httpd
+  - httpd-tools
+  - postgresql
+  - mysql
+

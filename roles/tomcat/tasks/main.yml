@@ -1,0 +1,5 @@
+---
+# tasks file for /etc/ansible/roles/tomcat
+- import_tasks: java.yml
+- import_tasks: tomcat8.yml
+  #- import_tasks: service.yml
