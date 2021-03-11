@@ -1,4 +1,0 @@
-- name: "Install Apache"
-  yum: 
-    name: "{{ packages }}"
-    state: present

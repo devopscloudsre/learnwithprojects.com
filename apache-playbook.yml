@@ -1,0 +1,39 @@
+---
+- name: "Play 1- cgi website configuration"  
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: "install apache"
+      yum:
+        name: "httpd"
+        state: present
+        
+    - name: "install git"
+      yum:
+        name: "git"
+        state: present
+    - name: "Create a directory - doc root"
+      file:
+        path: /var/www/html/learnwithproject.com
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: "Configure Apache with docroot & Timeout 300 secs"
+      copy:
+        src: /etc/ansible/template/httpd.conf
+        dest: /etc/httpd/conf/httpd.conf
+        owner: root
+        group: root
+        mode: '0644'
+    - name: "code copy"
+      git:
+        repo: 'https://github.com/mailrahulsre/learnwithprojects.com.git'
+        dest: /var/www/html/learnwithproject.com
+        version: master
+    - name: "start apache"
+      service:
+        name: httpd
+        state: started
+
