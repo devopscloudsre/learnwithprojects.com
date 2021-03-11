@@ -22,7 +22,7 @@
 
     - name: "Configure Apache with docroot & Timeout 300 secs"
       copy:
-        src: /etc/ansible/template/httpd.conf
+        src: /etc/ansible/learnwithprojects.com/httpd.conf
         dest: /etc/httpd/conf/httpd.conf
         owner: root
         group: root
