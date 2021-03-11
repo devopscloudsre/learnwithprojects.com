@@ -1,17 +1,22 @@
 ---
-- name: "Play 1- cgi website configuration"  
+- name: "Play 1- cgi website configuration"
   hosts: webservers
   become: yes
   tasks:
     - name: "install apache"
       yum:
-        name: "httpd"
+        name: "{{ packages }}"
         state: present
-        
-    - name: "install git"
-      yum:
-        name: "git"
-        state: present
+      vars:
+        packages:
+          - httpd
+          - vim
+          - wget
+          - tree
+          - git
+      tags:
+        - install-repo
+
     - name: "Create a directory - doc root"
       file:
         path: /var/www/html/learnwithproject.com
@@ -19,6 +24,8 @@
         mode: '0755'
         owner: root
         group: root
+      tags:
+        - create-directory
 
     - name: "Configure Apache with docroot & Timeout 300 secs"
       copy:
@@ -27,13 +34,20 @@
         owner: root
         group: root
         mode: '0644'
+      tags:
+        - configure-apache
+
     - name: "code copy"
       git:
         repo: 'https://github.com/mailrahulsre/learnwithprojects.com.git'
         dest: /var/www/html/learnwithproject.com
         version: master
+      tags: code-copy
+
     - name: "start apache"
       service:
         name: httpd
         state: started
+      tags: start-apache
+
 

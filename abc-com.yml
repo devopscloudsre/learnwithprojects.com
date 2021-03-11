@@ -1,0 +1,17 @@
+---
+- name: Configure Apache for httpd
+  hosts: abc-com-apache-node
+  become: yes
+  roles:
+    - apache
+
+- name: Configure Apache for httpd
+  hosts: abc-com-apache-node
+  become: yes
+  tasks:
+    - name: copy the abc.com code
+      copy:
+        src: /etc/ansible/abc-com/index.html
+        dest: /var/www/html/index.html
+        owner: root                                    
+
