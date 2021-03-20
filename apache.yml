@@ -1,0 +1,50 @@
+---
+- name: "Play 1- Website COnfiguration"
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: ensure a list of packages installed
+      yum:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - httpd
+          - httpd-tools
+          - git
+          - vim
+          - wget
+          - tree
+    - name: Create a apache docroot directory if it does not exist
+      file:
+        path: /var/www/html/learnwithproject.com
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+        recurse: yes
+    - name: "Configure Apache with docroot & Timeout 300 secs"
+      copy: 
+        dest: /etc/httpd/conf/httpd.conf
+        group: root
+        mode: "0644"
+        owner: root
+        src: /etc/ansible/learnwithprojects.com/httpd.conf  
+
+    - name: Remove file (delete file)
+      file:
+        path: /etc/httpd/conf.d/virtual.conf
+        state: absent 
+
+    - name: "code copy"
+      git: 
+        dest: /var/www/html/learnwithproject.com
+        repo: "https://github.com/mailrahulsre/learnwithprojects.com.git"
+        version: master
+        force: yes
+      tags: git_clone
+
+    - name: Start service httpd, if not started
+      service:
+        name: httpd
+        state: restarted
