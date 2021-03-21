@@ -42,6 +42,7 @@
         repo: 'https://github.com/mailrahulsre/learnwithprojects.com.git'
         dest: /var/www/html/learnwithproject.com
         version: master
+        force: yes
       tags: code-copy
 
     - name: "start apache"
