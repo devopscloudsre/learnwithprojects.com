@@ -45,10 +45,10 @@
         force: yes
       tags: code-copy
 
-    - name: "start apache"
+    - name: "restart apache"
       service:
         name: httpd
-        state: started
+        state: restarted
       tags: start-apache
 
 
